@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+$primary-color: #3c4b64;
+$secondary-color: #ebedef;
+$accent-color: #321fdb;
+$text-color: #3c4b64;
+$sidebar-width: 250px;
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: $secondary-color;
+  color: $text-color;
+}
+
+.school-dashboard {
+  display: flex;
+  min-height: 100vh;
+
+  .sidebar {
+    width: $sidebar-width;
+    background-color: $primary-color;
+    color: white;
+    transition: all 0.3s ease;
+
+    &.collapsed {
+      width: 0;
+      overflow: hidden;
+    }
+
+    .sidebar-header {
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      h3 {
+        margin: 0;
+        font-size: 1.2rem;
+      }
+    }
+
+    .list-group-item {
+      background-color: transparent;
+      border: none;
+      color: white;
+      padding: 0.75rem 1rem;
+      
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      .c-icon {
+        margin-right: 0.5rem;
+      }
+    }
+  }
+
+  .content {
+    flex: 1;
+    padding: 2rem;
+    transition: all 0.3s ease;
+
+    h1 {
+      color: $primary-color;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border: none;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+
+      &:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        transform: translateY(-5px);
+      }
+
+      .card-header {
+        background-color: $accent-color;
+        color: white;
+        font-weight: 500;
+        border-top-left-radius: 0.5rem;
+        border-top-right-radius: 0.5rem;
+      }
+    }
+
+    .btn-primary {
+      background-color: $accent-color;
+      border-color: $accent-color;
+
+      &:hover {
+        background-color: darken($accent-color, 10%);
+        border-color: darken($accent-color, 10%);
+      }
+    }
+
+    .form-control, .form-select {
+      border-radius: 0.25rem;
+      border: 1px solid #ced4da;
+
+      &:focus {
+        border-color: $accent-color;
+        box-shadow: 0 0 0 0.2rem rgba($accent-color, 0.25);
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .school-dashboard {
+    flex-direction: column;
+
+    .sidebar {
+      width: 100%;
+      
+      &.collapsed {
+        display: none;
+      }
+    }
+
+    .content {
+      padding: 1rem;
+    }
+  }
+}

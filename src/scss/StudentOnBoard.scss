@@ -1,0 +1,36 @@
+.dropzone {
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 200px;
+  border-width: 2px;
+  border-radius: 20px;
+  border-color: #cccccc;
+  border-style: dashed;
+  background-color: #fff9f9;
+  color: #333;
+  outline: none;
+  transition: border 0.24s ease-in-out;
+  padding: 20px;
+  text-align: center;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto; // To handle overflow in case of large tables
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0 10px; // Adds space between rows; adjust as needed
+}
+
+th, td {
+  padding: 10px; // Adds space inside cells
+  border: 1px solid #3a3636; // Adds border to cells
+}
+
+th {
+  background-color: #636161; // Optional: Adds background color to header cells
+}

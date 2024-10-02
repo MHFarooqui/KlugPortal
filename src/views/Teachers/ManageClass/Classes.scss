@@ -1,0 +1,270 @@
+// Variables
+$primary-color: #321fdb;
+$secondary-color: #ced2d8;
+$success-color: #2eb85c;
+$danger-color: #e55353;
+$light-gray: #ebedef;
+$dark-gray: #3c4b64;
+$white: #ffffff;
+$border-radius: 0.25rem;
+$box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+$transition-speed: 0.3s;
+
+.manage-class {
+  padding: 2rem;
+  min-height: 100vh;
+
+  h1 {
+    color: $dark-gray;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+  }
+
+  .class-table {
+    width: 100%;
+    background-color: $white;
+    border-radius: $border-radius;
+    overflow: hidden;
+    box-shadow: $box-shadow;
+
+    th,
+    td {
+      padding: 1rem;
+      vertical-align: middle;
+    }
+
+    thead {
+      background-color: $primary-color;
+      color: $white;
+
+      th {
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+    }
+
+    tbody {
+      tr {
+        transition: background-color $transition-speed ease-in-out;
+
+        &:nth-child(even) {
+          background-color: rgba($light-gray, 0.3);
+        }
+
+        &:hover {
+          background-color: rgba($primary-color, 0.1);
+        }
+      }
+    }
+
+    .subject-dropdown {
+      width: 100%;
+      padding: 0.375rem 0.75rem;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      color: $dark-gray;
+      background-color: $white;
+      background-clip: padding-box;
+      border: 1px solid $secondary-color;
+      border-radius: $border-radius;
+      transition: border-color $transition-speed ease-in-out, box-shadow $transition-speed ease-in-out;
+
+      &:focus {
+        border-color: lighten($primary-color, 25%);
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba($primary-color, 0.25);
+      }
+    }
+  }
+
+  .assign-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border-radius: $border-radius;
+    color: $white;
+    background-color: $success-color;
+    border: none;
+    transition: all $transition-speed ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+
+    &:hover {
+      background-color: darken($success-color, 10%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    svg {
+      font-size: 1.25rem;
+    }
+  }
+
+  .modal {
+    .modal-content {
+      border-radius: $border-radius;
+      overflow: hidden;
+    }
+
+    .modal-header {
+      background-color: $primary-color;
+      color: $white;
+      padding: 1rem 1.5rem;
+
+      .modal-title {
+        font-weight: 600;
+        font-size: 1.25rem;
+      }
+
+      .btn-close {
+        color: $white;
+      }
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+
+      .teacher-table {
+        width: 100%;
+        margin-bottom: 1rem;
+
+        th,
+        td {
+          padding: 0.75rem;
+          vertical-align: middle;
+        }
+
+        thead {
+          background-color: $light-gray;
+
+          th {
+            font-weight: 600;
+            color: $dark-gray;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+          }
+        }
+
+        tbody {
+          tr {
+            transition: background-color $transition-speed ease-in-out;
+
+            &:hover {
+              background-color: rgba($primary-color, 0.1);
+            }
+          }
+        }
+      }
+
+      .select-button {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        border-radius: $border-radius;
+        color: $primary-color;
+        background-color: transparent;
+        border: 1px solid $primary-color;
+        transition: all $transition-speed ease-in-out;
+
+        &:hover,
+        &.active {
+          color: $white;
+          background-color: $primary-color;
+        }
+      }
+    }
+
+    .modal-footer {
+      padding: 1rem 1.5rem;
+      background-color: $light-gray;
+
+      .btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        border-radius: $border-radius;
+        transition: all $transition-speed ease-in-out;
+
+        &-secondary {
+          color: $dark-gray;
+          background-color: $white;
+          border: 1px solid $secondary-color;
+
+          &:hover {
+            background-color: $secondary-color;
+          }
+        }
+
+        &-primary {
+          color: $white;
+          background-color: $primary-color;
+          border: none;
+
+          &:hover {
+            background-color: darken($primary-color, 10%);
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .manage-class {
+    padding: 1rem;
+
+    .class-table {
+      font-size: 0.875rem;
+
+      th,
+      td {
+        padding: 0.75rem;
+      }
+    }
+
+    .assign-button {
+      padding: 0.375rem 0.75rem;
+      font-size: 0.75rem;
+    }
+
+    .modal {
+      .modal-header {
+        padding: 0.75rem 1rem;
+
+        .modal-title {
+          font-size: 1.125rem;
+        }
+      }
+
+      .modal-body {
+        padding: 1rem;
+
+        .teacher-table {
+          font-size: 0.875rem;
+
+          th,
+          td {
+            padding: 0.5rem;
+          }
+        }
+
+        .select-button {
+          padding: 0.25rem 0.5rem;
+          font-size: 0.75rem;
+        }
+      }
+
+      .modal-footer {
+        padding: 0.75rem 1rem;
+
+        .btn {
+          padding: 0.375rem 0.75rem;
+          font-size: 0.75rem;
+        }
+      }
+    }
+  }
+}

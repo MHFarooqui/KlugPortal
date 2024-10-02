@@ -1,0 +1,212 @@
+.create-test-container {
+  padding: 2rem;
+  min-height: 100vh;
+
+  .create-test-card,
+  .saved-questions-card {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    height: calc(100vh - 4rem);
+    display: flex;
+    flex-direction: column;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    border-bottom: none;
+    padding: 1.5rem;
+  }
+
+  .create-test-title,
+  .saved-questions-title {
+    color: #ffffff;
+    font-weight: 700;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .card-body {
+    overflow-y: auto;
+    flex-grow: 1;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-label {
+    font-weight: 600;
+    color: #4a4a4a;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+  }
+
+  .form-control,
+  .form-select {
+    border-radius: 8px;
+    border: 2px solid #e0e6ed;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+    background-color: #ffffff;
+    color: #2d3748;
+    font-size: 1rem;
+
+    &:focus {
+      border-color: #6a11cb;
+      box-shadow: 0 0 0 0.2rem rgba(106, 17, 203, 0.25);
+    }
+
+    &::placeholder {
+      color: #a0aec0;
+    }
+  }
+
+  .submit-btn {
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #ffffff;
+
+    &:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    .btn-icon {
+      margin-right: 0.5rem;
+    }
+  }
+
+  .saved-question {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .question-number {
+      color: #6a11cb;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .question-meta {
+      font-size: 0.9rem;
+      color: #718096;
+      margin-bottom: 0.5rem;
+    }
+
+    .question-text {
+      font-weight: 500;
+      color: #2d3748;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    .options-list {
+      list-style-type: none;
+      padding-left: 0;
+      margin-bottom: 0;
+
+      li {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.75rem;
+        padding: 0.75rem;
+        background-color: #f7fafc;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background-color: #edf2f7;
+        }
+
+        &.correct {
+          background-color: #c6f6d5;
+        }
+      }
+
+      .option-label {
+        font-weight: 600;
+        color: #6a11cb;
+        margin-right: 0.75rem;
+        min-width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #e9d8fd;
+        border-radius: 50%;
+      }
+
+      .option-text {
+        flex-grow: 1;
+        color: #2d3748;
+      }
+
+      .correct-icon {
+        color: #38a169;
+        margin-left: 0.5rem;
+      }
+    }
+  }
+
+  .no-questions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #a0aec0;
+    font-style: italic;
+    text-align: center;
+    padding: 2rem;
+
+    .no-questions-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+  }
+}
+
+@media (max-width: 991px) {
+  .create-test-container {
+    padding: 1rem;
+
+    .create-test-card,
+    .saved-questions-card {
+      height: auto;
+      margin-bottom: 1rem;
+    }
+  }
+}

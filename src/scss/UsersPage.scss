@@ -1,0 +1,136 @@
+.student-list-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.student-list-card {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.student-list-header {
+  background-color: #321fdb;
+  color: white;
+}
+
+.search-container {
+  margin-bottom: 1rem;
+}
+
+.total-students {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100%;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-button {
+  transition: all 0.3s ease;
+  min-width: 80px;
+}
+
+.action-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.edit-button {
+  background-color: #4CAF50;
+  border-color: #4CAF50;
+}
+
+.edit-button:hover {
+  background-color: #45a049;
+  border-color: #45a049;
+}
+
+.delete-button {
+  background-color: #f44336;
+  border-color: #f44336;
+}
+
+.delete-button:hover {
+  background-color: #da190b;
+  border-color: #da190b;
+}
+
+@media (max-width: 768px) {
+  .total-students {
+    justify-content: flex-start;
+    margin-top: 1rem;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .action-button {
+    width: 100%;
+  }
+} 
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style-type: none;
+  padding: 0;
+  margin: 20px 0;
+
+  li {
+    margin: 0 5px;
+
+    a {
+      display: block;
+      padding: 8px 12px;
+      text-decoration: none;
+      color: #333;
+      border-radius: 4px;
+      transition: background-color 0.3s, color 0.3s;
+
+      &:hover {
+        background-color: #ccc;
+      }
+    }
+
+    &.active {
+      a {
+        background-color: #64676b;
+        color: #ccc;
+
+        &:hover {
+          background-color: #0056b3;
+        }
+      }
+    }
+
+    &.disabled {
+      a {
+        color: #ccc;
+        pointer-events: none;
+      }
+    }
+  }
+
+  .break {
+    a {
+      cursor: default;
+    }
+  }
+
+  .previous,
+  .next {
+    font-weight: bold;
+
+    a {
+      &:hover {
+        background-color: #e9ecef;
+      }
+    }
+  }
+}

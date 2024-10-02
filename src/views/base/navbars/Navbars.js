@@ -59,7 +59,7 @@ const CNavbars = () => {
                   </CDropdownMenu>
                 </CDropdown>
                 <CDropdown inNav>
-                  <CDropdownToggle color="primary">User</CDropdownToggle>
+                  <CDropdownToggle color="primary" >User</CDropdownToggle>
                   <CDropdownMenu>
                     <CDropdownItem>Account</CDropdownItem>
                     <CDropdownItem>Settings</CDropdownItem>
