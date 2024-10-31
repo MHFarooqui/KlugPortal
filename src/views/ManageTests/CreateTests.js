@@ -23,20 +23,27 @@ function CreateTest() {
   const [formData, setFormData] = useState({
     testName: '',
     subject: '',
-    class: '',
+    class_Id: '',
     question: '',
-    Options: { A: '', B: '', C: '', D: '' },
-    Answer: '',
+    options: [
+      { option: '' },
+      { option: '' },
+      { option: '' },
+      { option: '' }
+    ],
+    type: 'MCQ',
+    answer: '',
   });
   const [savedData, setSavedData] = useState([]);
   const [isFirstQuestion, setIsFirstQuestion] = useState(true);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertColor, setAlertColor] = useState('success');
-  const [classDetails, setClassDetails] = useState([])
+  const [classDetails, setClassDetails] = useState([]);
+  const [subjects, setSubjects] = useState([]);
 
   useEffect(() => {
     fetchClasses();
-  }, [])
+  }, []);
 
   const fetchClasses = () => {
     fetch("http://localhost:10000/api/admin/getClasses", {
@@ -48,58 +55,92 @@ function CreateTest() {
     })
       .then(response => {
         if (!response.ok) {
-          throw new Error('Network response was not ok')
+          throw new Error('Network response was not ok');
         }
-        return response.json()
+        return response.json();
       })
       .then(data => setClassDetails(data))
-      .catch(err => console.error('Fetch error:', err))
-  }
+      .catch(err => console.error('Fetch error:', err));
+  };
+
+  const fetchSubjects = (classId) => {
+    fetch(`http://localhost:10000/api/admin/getSubjects/${classId}`, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${localStorage.getItem('token')}`
+      },
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => setSubjects(data))
+      .catch(err => console.error('Fetch error:', err));
+  };
+
+  const handleClassChange = (e) => {
+    const { value } = e.target;
+    const selectedClass = classDetails.find(c => c.id == value);
+    if (selectedClass) {
+      setFormData(prev => ({
+        ...prev,
+        class_Id: value,
+        subject: '', // Reset subject when class changes
+      }));
+      fetchSubjects(value);
+    }
+  };
+
+  const handleSubjectChange = (e) => {
+    const { value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      subject: value,
+    }));
+  };
+
+  const handleOptionChange = (index, value) => {
+    setFormData(prev => ({
+      ...prev,
+      options: prev.options.map((opt, i) => 
+        i === index ? { ...opt, option: value } : opt
+      ),
+    }));
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    if (name.startsWith('option')) {
-      const optionKey = name.charAt(name.length - 1);
-      setFormData({
-        ...formData,
-        Options: { ...formData.Options, [optionKey]: value },
-      });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newQuestion = { ...formData, class_id: getClassId(formData.class) };
-    setSavedData([...savedData, newQuestion]);
+    const newQuestion = { ...formData };
+    setSavedData(prev => [...prev, newQuestion]);
 
     if (isFirstQuestion) {
       setIsFirstQuestion(false);
     } else {
-      // Keep the test name, subject and class for subsequent questions
-      const { testName, subject, class: classValue } = formData;
-      setFormData({
+      const { testName, subject, class_Id } = formData;
+      console.log(formData);
+      setFormData(prev => ({
+        ...prev,
         testName,
         subject,
-        class: classValue,
+        class_Id,
         question: '',
-        Options: { A: '', B: '', C: '', D: '' },
-        Answer: '',
-      });
+        options: [
+          { option: '' },
+          { option: '' },
+          { option: '' },
+          { option: '' }
+        ],
+        answer: '',
+      }));
     }
-  };
-
-  const getClassId = (className) => {
-    const classMap = {
-      'Class 6': 1,
-      'Class 7': 2,
-      'Class 8': 3,
-      'Class 9': 4,
-      'Class 10': 5,
-    };
-    return classMap[className] || 0;
   };
 
   const handleCreateTest = async () => {
@@ -111,12 +152,12 @@ function CreateTest() {
 
     const testData = {
       testName: formData.testName,
-      classId: getClassId(formData.class),
+      class_Id: formData.class_Id,
+      org_id: localStorage.getItem('org_id'), // Assuming org_id is stored in localStorage
       subject: formData.subject,
       MCQ: savedData,
     };
 
-    console.log(testData);
     try {
       const response = await fetch('http://localhost:10000/api/admin/createTests', {
         method: 'POST',
@@ -128,17 +169,23 @@ function CreateTest() {
       });
 
       if (response.ok) {
-        setAlertMessage('Test created successfully!');
+        setAlertMessage('Test created successfully!' );
         setAlertColor('success');
-        // Reset the form and saved data
         setSavedData([]);
+        setClassDetails([]);
         setFormData({
           testName: '',
           subject: '',
-          class: '',
+          class_Id: '',
           question: '',
-          Options: { A: '', B: '', C: '', D: '' },
-          Answer: '',
+          options: [
+            { option: '' },
+            { option: '' },
+            { option: '' },
+            { option: '' }
+          ],
+          type: 'MCQ',
+          answer: '',
         });
         setIsFirstQuestion(true);
       } else {
@@ -149,8 +196,6 @@ function CreateTest() {
       setAlertColor('danger');
     }
   };
-
-  const subjects = ['Mathematics', 'Science', 'English', 'History', 'Geography'];
 
   return (
     <CContainer fluid className="create-test-container">
@@ -175,15 +220,15 @@ function CreateTest() {
                   <div key={index} className="saved-question">
                     <h6 className="question-number">Question {index + 1}</h6>
                     <p className="question-meta">
-                      Test Name: {data.testName} | Subject: {data.subject} | Class: {data.class}
+                      Test Name: {data.testName} | Subject: {data.subject} | Class ID: {data.class_Id}
                     </p>
                     <p className="question-text">{data.question}</p>
                     <ul className="options-list">
-                      {Object.entries(data.Options).map(([key, value]) => (
-                        <li key={key} className={key === data.Answer ? 'correct' : ''}>
-                          <span className="option-label">{key}</span>
-                          <span className="option-text">{value}</span>
-                          {key === data.Answer && <FaCheck className="correct-icon" />}
+                      {data.options.map((option, optionIndex) => (
+                        <li key={optionIndex} className={option.option === data.answer ? 'correct' : ''}>
+                          <span className="option-label">{String.fromCharCode(65 + optionIndex)}</span>
+                          <span className="option-text">{option.option}</span>
+                          {option.option === data.answer && <FaCheck className="correct-icon" />}
                         </li>
                       ))}
                     </ul>
@@ -199,7 +244,7 @@ function CreateTest() {
           </CCard>
 
           {alertMessage && (
-            <CAlert color={alertColor} className="mb-4">
+            <CAlert color={alertColor} className="mb-4" >
               {alertMessage}
             </CAlert>
           )}
@@ -210,11 +255,10 @@ function CreateTest() {
               <h4 className="create-test-title">Create New Question</h4>
             </CCardHeader>
             <CCardBody>
-              <CForm onSubmit={handleSubmit} autoComplete="off">
+              <CForm onSubmit={handleSubmit}>
                 <div className="form-group">
                   <CFormLabel htmlFor="testName">Test Name</CFormLabel>
                   <CFormInput
-                    type="text"
                     id="testName"
                     name="testName"
                     value={formData.testName}
@@ -228,20 +272,20 @@ function CreateTest() {
                 <CRow>
                   <CCol md={6}>
                     <div className="form-group">
-                      <CFormLabel htmlFor="subject">Subject</CFormLabel>
+                      <CFormLabel htmlFor="class_Id">Class</CFormLabel>
                       <CFormSelect
-                        id="subject"
-                        name="subject"
-                        value={formData.subject}
-                        onChange={handleChange}
+                        id="class_Id"
+                        name="class_Id"
+                        value={formData.class_id}
+                        onChange={handleClassChange}
                         required
                         className="mb-3"
                         disabled={!isFirstQuestion}
                       >
-                        <option value="">Select subject</option>
-                        {subjects.map((subject) => (
-                          <option key={subject} value={subject}>
-                            {subject}
+                        <option value="">Select class</option>
+                        {classDetails.map((classOption) => (
+                          <option key={classOption.id} value={classOption.id}>
+                            {classOption.class}
                           </option>
                         ))}
                       </CFormSelect>
@@ -249,20 +293,20 @@ function CreateTest() {
                   </CCol>
                   <CCol md={6}>
                     <div className="form-group">
-                      <CFormLabel htmlFor="class">Class</CFormLabel>
+                    <CFormLabel htmlFor="subject">Subject</CFormLabel>
                       <CFormSelect
-                        id="class"
-                        name="class"
-                        value={formData.class}
-                        onChange={handleChange}
+                        id="subject"
+                        name="subject"
+                        value={formData.subject}
+                        onChange={handleSubjectChange}
                         required
                         className="mb-3"
-                        disabled={!isFirstQuestion}
+                        // disabled={!formData.class_Id || !isFirstQuestion}
                       >
-                        <option value="">Select class</option>
-                        {classDetails.map((classOption) => (
-                          <option key={classOption.class} value={classOption.class}>
-                            {classOption.class}
+                        <option value="">Select subject</option>
+                        {subjects.map((subject) => (
+                          <option key={subject.id} value={subject.subject_name}>
+                            {subject.subject_name}
                           </option>
                         ))}
                       </CFormSelect>
@@ -272,32 +316,28 @@ function CreateTest() {
                 <div className="form-group">
                   <CFormLabel htmlFor="question">Question</CFormLabel>
                   <CFormTextarea
-                    type="text"
                     id="question"
                     name="question"
                     value={formData.question}
                     onChange={handleChange}
                     required
-                    autoComplete="off"
                     className="mb-3"
                     placeholder="Enter your question here"
                   />
                 </div>
                 <CRow>
-                  {['A', 'B', 'C', 'D'].map((option) => (
-                    <CCol md={6} key={option}>
+                  {formData.options.map((option, index) => (
+                    <CCol md={6} key={index}>
                       <div className="form-group">
-                        <CFormLabel htmlFor={`option${option}`}>Option {option}</CFormLabel>
+                        <CFormLabel htmlFor={`option-${index}`}>Option {String.fromCharCode(65 + index)}</CFormLabel>
                         <CFormInput
-                          type="text"
-                          id={`option${option}`}
-                          name={`option${option}`}
-                          value={formData.Options[option]}
-                          onChange={handleChange}
+                          id={`option-${index}`}
+                          name={`option-${index}`}
+                          value={option.option}
+                          onChange={(e) => handleOptionChange(index, e.target.value)}
                           required
-                          autoComplete="off"
                           className="mb-3"
-                          placeholder={`Enter option ${option}`}
+                          placeholder={`Enter option ${String.fromCharCode(65 + index)}`}
                         />
                       </div>
                     </CCol>
@@ -307,16 +347,16 @@ function CreateTest() {
                   <CFormLabel htmlFor="answer">Correct Answer</CFormLabel>
                   <CFormSelect
                     id="answer"
-                    name="Answer"
-                    value={formData.Answer}
+                    name="answer"
+                    value={formData.answer}
                     onChange={handleChange}
                     required
                     className="mb-3"
                   >
                     <option value="">Select correct answer</option>
-                    {['A', 'B', 'C', 'D'].map((option) => (
-                      <option key={option} value={option}>
-                        Option {option}
+                    {formData.options.map((option, index) => (
+                      <option key={index} value={option.option}>
+                        Option {String.fromCharCode(65 + index)}
                       </option>
                     ))}
                   </CFormSelect>

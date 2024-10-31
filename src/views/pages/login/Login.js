@@ -37,12 +37,12 @@ const Login = () => {
 
       if (!response.ok) {
         throw new Error('Login failed')
-      }
+      } else {
+        const data = await response.json()
+        localStorage.setItem('token', data.AuthToken)
 
-      const data = await response.json()
-      localStorage.setItem('token', data.AuthToken)
-      
-      navigate('/')
+        navigate('/')
+      }
     } catch (err) {
       setError('Login failed. Please check your credentials.')
       console.error('Login error:', err)
@@ -65,9 +65,9 @@ const Login = () => {
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput 
-                        placeholder="Email" 
-                        autoComplete="email" 
+                      <CFormInput
+                        placeholder="Email"
+                        autoComplete="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required

@@ -21,6 +21,7 @@ import { IoMdReturnRight } from "react-icons/io";
 import './StudentClasses.scss'
 import '../../scss/UsersPage.scss'
 
+
 const StudentClasses = () => {
   const [classes, setClasses] = useState([])
   const [searchTerm, setSearchTerm] = useState("")
@@ -46,19 +47,18 @@ const StudentClasses = () => {
       .then(data => setClasses(data))
       .catch(err => console.error('Fetch error:', err))
   }, [navigate])
-
   const filteredClassData = classes.filter((item) =>
     item.class.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
   const totalStudents = filteredClassData.reduce((sum, item) => sum + Number(item.student_count), 0)
-  console.log(totalStudents);
   return (
     <CRow>
       <CCol xs={12}>
         <CCard className="mb-4">
-          <CCardHeader>
+          <CCardHeader className='d-flex align-items-center justify-content-between'>
             <strong>Student Count by Class</strong>
+            <CButton color="primary" onClick={() => {navigate('/ManageClasses')}}>Add class</CButton>
           </CCardHeader>
           <CCardBody>
             <CForm className="mb-3">
@@ -86,7 +86,7 @@ const StudentClasses = () => {
                     <CTableDataCell><CButton
                       className="action-button "
                       size="sm"
-                      onClick={() => { }}
+                      onClick={() => { navigate(`/ClassInfo/${item.id}`)}}
                     >
                       <IoMdReturnRight />
                     </CButton>

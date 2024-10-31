@@ -14,6 +14,13 @@ import {
   CFormInput,
   CBadge,
   CButton,
+  CModalHeader,
+  CModal,
+  CModalTitle,
+  CModalBody,
+  CForm,
+  CFormSelect,
+  CModalFooter,
 } from '@coreui/react'
 import '@coreui/coreui/dist/css/coreui.min.css'
 import '../../scss/UsersPage.scss'
@@ -36,7 +43,10 @@ function UsersPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [studentsDetails, setStudentsDetails] = useState([])
   const [currentPage, setCurrentPage] = useState(0)
-  const itemsPerPage = 1
+  const [editModalVisible, setEditModalVisible] = useState(false)
+  const [changeStudentDetails, setChangeStudentDetails] = useState([])
+  const [updatedStudent, setUpdatedStudent] = useState(null)
+  const itemsPerPage = 10
 
   useEffect(() => {
     fetchStudents()
@@ -68,13 +78,15 @@ function UsersPage() {
     student.student_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     student.phone_no.toLowerCase().includes(searchTerm.toLowerCase())
   )
-
+  localStorage.setItem('Students', studentsDetails.length);
   const paginatedStudents = filteredStudents.slice(
     currentPage * itemsPerPage,
     (currentPage + 1) * itemsPerPage
   )
 
   const handleEdit = (studentId) => {
+    setEditModalVisible(true)
+    console.log(changeStudentDetails);
     console.log(`Edit student with ID: ${studentId}`)
     // Add your edit logic here
   }
@@ -83,6 +95,42 @@ function UsersPage() {
     console.log(`Delete student with ID: ${studentId}`)
     // Add your delete logic here
   }
+
+  const handleInputChange = (e) => {
+    setChangeStudentDetails({
+      ...changeStudentDetails,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  const updateStudentRequest =async () => {
+    console.log("called")
+    await fetch(`http://localhost:10000/api/admin/UpdateStudent`, {
+      method: "PUT",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify(changeStudentDetails)
+    })
+    .then(response => response.json())
+    .then(data => console.log('Teacher updated successfully', data))
+    .catch(err => console.error('Error updating teacher:', err))
+  }
+
+  const handleSaveChanges = () => {
+    // Here you would typically make an API call to update the student details
+    // For this example, we'll just update the local state
+    const updatedStudents = studentsDetails.map(student => 
+      student.id === changeStudentDetails.id ? changeStudentDetails : student
+    )
+    updateStudentRequest();
+    setStudentsDetails(updatedStudents)
+    setUpdatedStudent(changeStudentDetails)
+    setEditModalVisible(false)
+  }
+
+
 
   return (
     <div className="student-list-container">
@@ -130,17 +178,17 @@ function UsersPage() {
                           <CButton
                             className="action-button edit-button"
                             size="sm"
-                            onClick={() => handleEdit(student.id)}
+                            onClick={() => { setChangeStudentDetails(student); return handleEdit(student.id) }}
                           >
                             Edit
                           </CButton>
-                          <CButton
+                          {/* <CButton
                             className="action-button delete-button"
                             size="sm"
                             onClick={() => handleDelete(student.id)}
                           >
                             Delete
-                          </CButton>
+                          </CButton> */}
                         </div>
                       </CTableDataCell>
                     </CTableRow>
@@ -161,7 +209,53 @@ function UsersPage() {
             </CCardBody>
           </CCard>
         </CCol>
+        <CModal visible={editModalVisible} onClose={() => setEditModalVisible(false)}>
+          <CModalHeader closeButton>
+            <CModalTitle>Edit Student</CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            <CForm>
+              <div className="mb-3">
+                <label htmlFor="studentName" className="form-label">User name</label>
+                <CFormInput
+                  type="text"
+                  id="studentName"
+                  name="student_name"
+                  value={changeStudentDetails?.student_name || ''}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="phoneNo" className="form-label">Phone No.</label>
+                <CFormInput
+                  type="text"
+                  id="phoneNo"
+                  name="phone_no"
+                  value={changeStudentDetails?.phone_no || ''}
+                  onChange={handleInputChange}
+                />
+              </div>
+            </CForm>
+          </CModalBody>
+          <CModalFooter>
+            <CButton color="secondary" onClick={() => setEditModalVisible(false)}>
+              Close
+            </CButton>
+            <CButton color="primary" onClick={handleSaveChanges}>
+              Save Changes
+            </CButton>
+          </CModalFooter>
+        </CModal>
       </CRow>
+      {updatedStudent && (
+        <CCard className="mt-4">
+          <CCardHeader>Updated Student Details</CCardHeader>
+          <CCardBody>
+            <p><strong>Name:</strong> {updatedStudent.student_name}</p>
+            <p><strong>Phone Number:</strong> {updatedStudent.phone_no}</p>
+          </CCardBody>
+        </CCard>
+      )}
     </div>
   )
 }

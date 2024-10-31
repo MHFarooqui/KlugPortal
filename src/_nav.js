@@ -17,7 +17,8 @@ import {
   cilCloudUpload
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
-import { IoIosLogIn } from "react-icons/io";
+import { SiGoogleclassroom } from "react-icons/si";
+import { PiExamLight } from "react-icons/pi";
 
 
 const _nav = [
@@ -43,20 +44,14 @@ const _nav = [
     component: CNavItem,
     name: 'Create Test',
     to: '/createTest',
-    icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
+    icon: <PiExamLight className="nav-icon"/>,
   },
-  {
-    component: CNavItem,
-    name: 'Manage department',
-    to: '/ManageClasses',
-    icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
-  },
-  {
-    component: CNavItem,
-    name: 'Docs',
-    href: 'https://coreui.io/react/docs/templates/installation/',
-    icon: <CIcon icon={cilDescription} customClassName="nav-icon" />,
-  },
+  // {
+  //   component: CNavItem,
+  //   name: 'Manage department',
+  //   to: '/ManageClasses',
+  //   icon: <SiGoogleclassroom className="nav-icon"/>,
+  // },
   {
     component: CNavItem,
     name: ' Classes',

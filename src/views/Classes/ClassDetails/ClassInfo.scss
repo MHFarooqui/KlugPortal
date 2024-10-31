@@ -1,0 +1,92 @@
+.classroom-dashboard {
+    padding: 2rem;  
+    min-height: 100vh;
+  
+    .card {
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      border-radius: 10px;
+      overflow: hidden;
+  
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+      }
+  
+      .card-header {
+        background-color: #3c4b64;
+        color: white;
+        font-weight: bold;
+        padding: 1rem;
+        font-size: 1.2rem;
+      }
+    }
+  
+    .student-count {
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #3c4b64;
+    }
+  
+    .search-bar {
+      position: relative;
+  
+      .search-input {
+        padding-right: 2.5rem;
+      }
+  
+      .search-icon {
+        position: absolute;
+        right: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+      }
+    }
+  
+    .student-item, .subject-item {
+      transition: background-color 0.3s ease;
+      border: none;
+      margin-bottom: 0.5rem;
+      border-radius: 5px;
+  
+      &:hover {
+        background-color: #e9ecef;
+        color: black;
+      }
+    }
+  
+    .student-grade {
+      font-weight: bold;
+      color: #4CAF50;
+    }
+  
+    .subject-color-indicator {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+    }
+  
+    .class-incharge {
+      background-color: #d1ecf1;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-top: 1.5rem;
+  
+      h4 {
+        color: #0c5460;
+        margin-bottom: 0.5rem;
+      }
+  
+      p {
+        font-weight: bold;
+        margin-bottom: 0;
+        color: #0c5460;
+      }
+    }
+  
+    .avatar {
+      background-color: #3c4b64;
+    }
+  }

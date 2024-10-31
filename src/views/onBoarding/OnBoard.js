@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import {
     CCard, CCardBody, CCardHeader, CCol, CRow, CButton, CForm,
@@ -9,25 +9,44 @@ import {
 import '../../scss/StudentOnBoard.scss'; // Ensure this path is correct for your project structure
 import { FaFileUpload } from 'react-icons/fa';
 import * as XLSX from 'xlsx';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const DragDropUpload = ({ role }) => {
     const [data, setData] = useState([]);
 
     const [firstSelection, setFirstSelection] = useState('');
-    const [secondSelection, setSecondSelection] = useState('');
-    const [thirdSelection, setThirdSelection] = useState('');
+    const [classDetails, setClassDetails] = useState([]);
+    const [submited, setSubmited] = useState(false);
+
+    useEffect(() => {
+        fetchClasses();
+    }, []);
+
+    const fetchClasses = () => {
+        fetch("http://localhost:10000/api/admin/getClasses", {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${localStorage.getItem('token')}`
+            },
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => setClassDetails(data))
+            .catch(err => console.error('Fetch error:', err));
+    };
 
     const handleFirstChange = (e) => {
         setFirstSelection(e.target.value);
     };
 
-    const handleSecondChange = (e) => {
-        setSecondSelection(e.target.value);
-    };
+   
 
-    const handleThirdChange = (e) => {
-        setThirdSelection(e.target.value);
-    };
 
     const onDrop = useCallback((acceptedFiles) => {
         const file = acceptedFiles[0];
@@ -39,6 +58,7 @@ const DragDropUpload = ({ role }) => {
             const sheetName = workbook.SheetNames[0]; // Assuming you're interested in the first sheet
             const sheet = workbook.Sheets[sheetName];
             const jsonData = XLSX.utils.sheet_to_json(sheet);
+            console.log(jsonData);
             setData(jsonData);
         };
 
@@ -55,26 +75,66 @@ const DragDropUpload = ({ role }) => {
 
     const colSize = data.length === 0 ? { xs: 12, sm: 6, md: 4 } : { xs: 0, sm: 0, md: 0 };
 
-    const handleOnboard = () => {
-        // Handle onboarding logic here
-        console.log('Onboard button clicked');
+    const handleOnboard = async () => {
+        try {
+            setSubmited(true);
+            const response = await fetch(`http://localhost:10000/api/admin/onboard/student/${firstSelection}`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify(data),
+            })
+            if (response.ok)
+                toast.success("onboarded successfully")
+            else
+                toast.warning('some error has occurred please check the sheet')
+        } catch (error) {
+            toast.warning('some error has occurred')
+            console.log(error)
+        }
     };
+
+    const handleTeacherOnboard = async () => {
+        try {
+            setSubmited(true);
+            const response = await fetch(`http://localhost:10000/api/admin/onboard/teachers`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify(data),
+            })
+            if (response.ok)
+                toast.success("onboarded successfully")
+            else
+                toast.warning('some error has occurred please check the sheet')
+        } catch (error) {
+            toast.warning('some error has occurred')
+            console.log(error)
+        }
+    }
 
     return (
         <>
-            <CForm>
+            <ToastContainer />
+            {role == 'student' ? <CForm>
                 <CRow className="mb-5">
                     <CCol>
                         <CFormLabel htmlFor="firstDropdown">Grade</CFormLabel>
                         <CFormSelect id="firstDropdown" value={firstSelection} onChange={handleFirstChange}>
-                            <option value="">Select grade</option>
-                            <option value="option1">Option 1</option>
-                            <option value="option2">Option 2</option>
-                            <option value="option3">Option 3</option>
+                            <option value="">Select class</option>
+                            {classDetails.map((classOption) => (
+                                <option key={classOption.id} value={classOption.id}>
+                                    {classOption.class}
+                                </option>
+                            ))}
                         </CFormSelect>
                     </CCol>
                 </CRow>
-            </CForm>
+            </CForm>: <></>}
 
             <CRow className='d-flex align-items-center justify-content-center'>
                 <CCol xs={colSize.xs} sm={colSize.sm} md={colSize.md}>
@@ -102,7 +162,8 @@ const DragDropUpload = ({ role }) => {
                             )}
                             {data.length > 0 && (
                                 <div className="table-container">
-                                    <CButton color="primary" onClick={handleOnboard} className="mb-3">
+                                    <CButton
+                                        disabled={submited} color="primary" onClick={role === 'student' ? handleOnboard : handleTeacherOnboard} className="mb-3">
                                         Onboard
                                     </CButton>
                                     <table>

@@ -1,4 +1,5 @@
 import { element } from 'prop-types'
+import react from 'react'
 import React from 'react'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
@@ -51,13 +52,15 @@ const ManageClass = React.lazy(() => import('./views/Teachers/ManageClass/Classe
 const TestCreationPage = React.lazy(() => import('./views/ManageTests/CreateTests'))
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 const Announcement = React.lazy(() => import('./views/Announcements/Announcements'))
-const AddClass = React.lazy(() => import('./views/ClassManagement/AddClass'))
+const AddClass = React.lazy(() => import('./views/Classes/AddClass/AddClass'))
 const Subscription = React.lazy(() => import('./views/Subscription/Subscription'))
 const classes = React.lazy(() => import('./views/Classes/StudentClasses'))
+const classInfo = React.lazy(() => import('./views/Classes/ClassDetails/ClassInfo'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/Class', name: 'Classes', element: classes},
+  { path: '/ClassInfo/:id', name: 'ClassesInfor', element: classInfo},
   { path: '/subscription', name: 'Subscription', element: Subscription},
   { path: '/teachers', name: 'Teachers', element: Teachers },
   { path: '/users', name: 'Users', element: Users },
