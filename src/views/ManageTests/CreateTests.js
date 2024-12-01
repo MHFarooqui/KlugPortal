@@ -18,6 +18,9 @@ import { CgAddR } from 'react-icons/cg';
 import { FaCheck, FaTimes, FaSave } from 'react-icons/fa';
 import '@coreui/coreui/dist/css/coreui.min.css';
 import './CreateTest.scss';
+import Toastify from 'toastify-js'
+import { useNavigate } from 'react-router-dom' 
+import "toastify-js/src/toastify.css"
 
 function CreateTest() {
   const [formData, setFormData] = useState({
@@ -40,6 +43,7 @@ function CreateTest() {
   const [alertColor, setAlertColor] = useState('success');
   const [classDetails, setClassDetails] = useState([]);
   const [subjects, setSubjects] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchClasses();
@@ -54,6 +58,16 @@ function CreateTest() {
       },
     })
       .then(response => {
+        if(response.status === 401){
+          Toastify({
+            text: "Please login",
+            className: "info",
+            style: {
+              background: "linear-gradient(to right, #00b09b, #96c93d)",
+            }
+          }).showToast();
+          navigate('/login')
+        }
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

@@ -3,6 +3,9 @@ import { CButton, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCe
 import { MdAssignmentAdd, MdClose } from "react-icons/md"
 import './Classes.scss'
 import KlugAddBtn from '../../../components/shared/buttons/klugAddBtn'
+import Toastify from 'toastify-js'
+import { useNavigate } from 'react-router-dom' 
+import "toastify-js/src/toastify.css"
 
 const ManageClass = () => {
   const [classDetails, setClassDetails] = useState([])
@@ -12,6 +15,7 @@ const ManageClass = () => {
   const [selectedClass, setSelectedClass] = useState(null)
   const [selectedTeacher, setSelectedTeacher] = useState(null)
   const [selectedSubject, setSelectedSubject] = useState(null)
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchClassDetails()
@@ -45,10 +49,20 @@ const ManageClass = () => {
       },
     })
       .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok')
+        if(response.status === 401){
+          Toastify({
+            text: "Please login",
+            className: "info",
+            style: {
+              background: "linear-gradient(to right, #00b09b, #96c93d)",
+            }
+          }).showToast();
+          navigate('/login')
         }
-        return response.json()
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
       })
       .then(data => setTeachers(data))
       .catch(err => console.error('Fetch error:', err))
@@ -128,7 +142,7 @@ const ManageClass = () => {
           {classDetails.map((classDetail, index) => (
             <CTableRow key={index}>
               <CTableDataCell>{classDetail.class}</CTableDataCell>
-              <CTableDataCell>{classDetail.teacher_id == null ? '-' : classDetail.teacher_id}</CTableDataCell>
+              <CTableDataCell>{classDetail.teacher_name == null ? '-' : classDetail.teacher_name}</CTableDataCell>
               <CTableDataCell>{classDetail.student_count}</CTableDataCell>
               <CTableDataCell>
                 <CButton

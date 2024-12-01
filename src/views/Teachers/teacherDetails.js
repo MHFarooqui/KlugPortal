@@ -3,7 +3,10 @@ import React, { useEffect, useState } from 'react'
 import { MdOutlineTopic } from "react-icons/md";
 import { SiGoogleclassroom } from "react-icons/si";
 import { PiStudentBold } from "react-icons/pi";
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import Toastify from 'toastify-js'
+import { useNavigate } from 'react-router-dom' 
+import "toastify-js/src/toastify.css"
 
 
 
@@ -21,11 +24,21 @@ const TeacherDetails = () => {
             },
         })
             .then(response => {
+                if(response.status === 401){
+                  Toastify({
+                    text: "Please login",
+                    className: "info",
+                    style: {
+                      background: "linear-gradient(to right, #00b09b, #96c93d)",
+                    }
+                  }).showToast();
+                  navigate('/login')
+                }
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                } 
+                  throw new Error('Network response was not ok');
+                }
                 return response.json();
-            })
+              })
             .then(data => setClassDetails(data))
             .catch(err => console.error('Fetch error:', err));
     }, []);

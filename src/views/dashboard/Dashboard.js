@@ -15,6 +15,10 @@ import {
 import { CChart } from '@coreui/react-chartjs'
 import CIcon from '@coreui/icons-react'
 import { cilUser } from '@coreui/icons'
+import { useNavigate } from 'react-router-dom'
+
+import Toastify from 'toastify-js'
+import "toastify-js/src/toastify.css"
 
 export default function Dashboard() {
   const [selectedMonth, setSelectedMonth] = useState('')
@@ -24,6 +28,7 @@ export default function Dashboard() {
   const [classData, setClassData] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [scorePerformance, setScorePerformance] = useState([])
+  const navigate = useNavigate();
 
   let classScorePerformanceChartData = {
     labels: [],
@@ -38,6 +43,48 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchClassDetails();
+    // setClassDetails([
+    //   { id: 1, class: "1st" },
+    //   { id: 2, class: "2nd" },
+    //   { id: 3, class: "3rd" },
+    //   { id: 4, class: "4th" },
+    //   { id: 5, class: "5th" },
+    //   { id: 6, class: "6th" },
+    //   { id: 7, class: "7th" },
+    //   { id: 8, class: "8th" },
+    //   { id: 9, class: "9th" },
+    //   { id: 10, class: "10th" },
+    //   { id: 11, class: "11th" },
+    //   { id: 12, class: "12th" },
+
+    // ]);
+
+    // setPerformanceData([
+    //   { class_id: 1, month: 'January', average_attendance_percentage: 90 },
+    //   { class_id: 1, month: 'February', average_attendance_percentage: 85 },
+    //   { class_id: 2, month: 'January', average_attendance_percentage: 80 },
+    //   { class_id: 2, month: 'February', average_attendance_percentage: 88 },
+    //   { class_id: 3, month: 'January', average_attendance_percentage: 75 },
+    //   { class_id: 3, month: 'February', average_attendance_percentage: 70 }, { class_id: 4, month: 'January', average_attendance_percentage: 70 },
+    //   { class_id: 4, month: 'February', average_attendance_percentage: 60 }, { class_id: 5, month: 'January', average_attendance_percentage: 65 },
+    //   { class_id: 5, month: 'February', average_attendance_percentage: 75 }, { class_id: 6, month: 'January', average_attendance_percentage: 80 },
+    //   { class_id: 6, month: 'February', average_attendance_percentage: 78 }, { class_id: 7, month: 'January', average_attendance_percentage: 83 },
+    //   { class_id: 7, month: 'February', average_attendance_percentage: 88 },{ class_id: 8, month: 'January', average_attendance_percentage: 88 },
+    //   { class_id: 8, month: 'February', average_attendance_percentage: 85 },{ class_id: 9, month: 'January', average_attendance_percentage: 89 },
+    //   { class_id: 9, month: 'February', average_attendance_percentage: 80 },{ class_id: 10, month: 'January', average_attendance_percentage: 95 },
+    //   { class_id: 10, month: 'February', average_attendance_percentage: 90 },{ class_id: 11, month: 'January', average_attendance_percentage: 76 },
+    //   { class_id: 11, month: 'February', average_attendance_percentage: 93 },{ class_id: 12, month: 'January', average_attendance_percentage: 60 },
+    //   { class_id: 12, month: 'February', average_attendance_percentage: 75 }
+    // ]);
+
+    // setScorePerformance([
+    //   { subject: 'Math', average_marks: 78 },
+    //   { subject: 'English', average_marks: 82 },
+    //   { subject: 'Science', average_marks: 85 },
+    //   { subject: 'History', average_marks: 88 }
+    // ]);
+
+    setSelectedMonth('January');
     fetchPerformanceData();
     fetchClassScorePerformance(selectedClass)
     if (performanceData.length > 0) {
@@ -54,10 +101,21 @@ export default function Dashboard() {
       },
     })
       .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok')
+        if(response.status === 401){
+          console.log(response.status)
+          Toastify({
+            text: "Please login",
+            className: "info",
+            style: {
+              background: "linear-gradient(to right, #00b09b, #96c93d)",
+            }
+          }).showToast();
+          navigate('/login')
         }
-        return response.json()
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
       })
       .then(data => setClassDetails(data))
       .catch(err => console.error('Fetch error:', err))

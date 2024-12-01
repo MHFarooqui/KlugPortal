@@ -18,6 +18,9 @@ import {
   CTableDataCell,
 } from '@coreui/react'
 import { ToastContainer, toast } from 'react-toastify';
+import Toastify from 'toastify-js'
+import { useNavigate } from 'react-router-dom' 
+import "toastify-js/src/toastify.css"
 import 'react-toastify/dist/ReactToastify.css';
 
 const ClassCreationForm = () => {
@@ -26,6 +29,7 @@ const ClassCreationForm = () => {
   const [subjects, setSubjects] = useState([])
   const [newSubject, setNewSubject] = useState({ name: '', teacher: '' })
   const [teacherDetails, setTeacherDetails] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchTeachersDetails()

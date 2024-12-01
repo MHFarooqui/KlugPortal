@@ -20,6 +20,8 @@ import '@coreui/coreui/dist/css/coreui.min.css'
 import { IoMdReturnRight } from "react-icons/io";
 import './StudentClasses.scss'
 import '../../scss/UsersPage.scss'
+import Toastify from 'toastify-js'
+import "toastify-js/src/toastify.css"
 
 
 const StudentClasses = () => {
@@ -36,13 +38,20 @@ const StudentClasses = () => {
       },
     })
       .then(response => {
-        if (response.status === 401) {
+        if(response.status === 401){
+          Toastify({
+            text: "Please login",
+            className: "info",
+            style: {
+              background: "linear-gradient(to right, #00b09b, #96c93d)",
+            }
+          }).showToast();
           navigate('/login')
         }
         if (!response.ok) {
-          throw new Error('Network response was not ok')
+          throw new Error('Network response was not ok');
         }
-        return response.json()
+        return response.json();
       })
       .then(data => setClasses(data))
       .catch(err => console.error('Fetch error:', err))

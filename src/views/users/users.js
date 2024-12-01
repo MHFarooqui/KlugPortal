@@ -25,6 +25,9 @@ import {
 import '@coreui/coreui/dist/css/coreui.min.css'
 import '../../scss/UsersPage.scss'
 import ReactPaginate from 'react-paginate'
+import Toastify from 'toastify-js'
+import { useNavigate } from 'react-router-dom' 
+import "toastify-js/src/toastify.css"
 
 const getGradeColor = (grade) => {
   const gradeMap = {
@@ -46,6 +49,7 @@ function UsersPage() {
   const [editModalVisible, setEditModalVisible] = useState(false)
   const [changeStudentDetails, setChangeStudentDetails] = useState([])
   const [updatedStudent, setUpdatedStudent] = useState(null)
+  const navigate = useNavigate();
   const itemsPerPage = 10
 
   useEffect(() => {
@@ -61,10 +65,20 @@ function UsersPage() {
       },
     })
       .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok')
+        if(response.status === 401){
+          Toastify({
+            text: "Please login",
+            className: "info",
+            style: {
+              background: "linear-gradient(to right, #00b09b, #96c93d)",
+            }
+          }).showToast();
+          navigate('/login')
         }
-        return response.json()
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
       })
       .then(data => setStudentsDetails(data))
       .catch(err => console.error('Fetch error:', err))

@@ -31,6 +31,7 @@ function ClassInfo() {
   const [searchTerm, setSearchTerm] = useState('')
   const [subjectTeacherInfo, setSubjectTeacherInfo] = useState([])
   const [editModalVisible, setEditModalVisible] = useState(false)
+  const [editIncgarge, setEditIncgarge] = useState(false)
   const [editingTeacher, setEditingTeacher] = useState(null)
   const [newTeacherId, setNewTeacherId] = useState('')
   const [teachers, setTeachers] = useState([])
@@ -127,6 +128,13 @@ function ClassInfo() {
     setEditModalVisible(true)
   }
 
+  const handleUpdateInCharge = (teacher) => {
+    setEditIncgarge(true);
+    setEditingTeacher(teacher)
+    setNewTeacherId(teacher.teacher_id)
+    setEditModalVisible(true)
+  }
+
   const handleSaveTeacher = () => {
     const newTeacher = teachers.find(teacher => teacher.id == newTeacherId)
     if (!newTeacher) {
@@ -139,7 +147,7 @@ function ClassInfo() {
         ? { ...teacher, teacher_id: newTeacherId, teacher_name: newTeacher.teacher_name }
         : teacher
     )
-    
+
     setSubjectTeacherInfo(updatedTeachers)
     setEditModalVisible(false)
 
@@ -155,10 +163,25 @@ function ClassInfo() {
         'Content-Type': 'application/json',
         'Authorization': `${localStorage.getItem('token')}`
       }
+    }).then(response => {
+      if (response.status === 401) {
+        Toastify({
+          text: "Please login",
+          className: "info",
+          style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+          }
+        }).showToast();
+        navigate('/login')
+      }
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
     })
-    .then(response => response.json())
-    .then(data => console.log('Teacher updated successfully', data))
-    .catch(err => console.error('Error updating teacher:', err))
+      .then(response => response.json())
+      .then(data => console.log('Teacher updated successfully', data))
+      .catch(err => console.error('Error updating teacher:', err))
   }
 
   return (
@@ -219,9 +242,14 @@ function ClassInfo() {
                   </CListGroupItem>
                 ))}
               </CListGroup>
-              <div className="class-incharge mt-4">
-                <h4>Class In-Charge</h4>
-                <p>{classIncharge.teacher_name}</p>
+              <div className="d-flex justify-content-between class-incharge mt-4">
+                <div>
+                  <h4>Class In-Charge</h4>
+                  <p>{classIncharge.teacher_name}</p>
+                </div>
+                <CButton color="light" onClick={() => handleUpdateInCharge(classIncharge)}>
+                  <CIcon icon={cilPencil} />
+                </CButton>
               </div>
             </CCardBody>
           </CCard>
@@ -235,7 +263,10 @@ function ClassInfo() {
         <CModalBody>
           <CForm>
             <div className="mb-3">
-              <label htmlFor="subjectName" className="form-label">Subject</label>
+              {editIncgarge == true ? 
+              <label htmlFor="subjectName" className="form-label">incharge</label> : 
+              <label htmlFor="subjectName" className="form-label">Subject</label>}
+
               <CFormInput
                 type="text"
                 id="subjectName"
@@ -274,4 +305,4 @@ function ClassInfo() {
 }
 
 
-export default  ClassInfo;  
+export default ClassInfo;  
