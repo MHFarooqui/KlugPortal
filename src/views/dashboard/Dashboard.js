@@ -93,32 +93,49 @@ export default function Dashboard() {
   }, [selectedClass])
 
   const fetchClassDetails = () => {
-    fetch("http://localhost:10000/api/admin/getClasses", {
-      method: "GET",
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `${localStorage.getItem('token')}`
-      },
-    })
-      .then(response => {
-        if(response.status === 401){
-          console.log(response.status)
-          Toastify({
-            text: "Please login",
-            className: "info",
-            style: {
-              background: "linear-gradient(to right, #00b09b, #96c93d)",
-            }
-          }).showToast();
-          navigate('/login')
-        }
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
+    try {
+      fetch("http://localhost:10000/api/admin/getClasses", {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `${localStorage.getItem('token')}`
+        },
       })
-      .then(data => setClassDetails(data))
-      .catch(err => console.error('Fetch error:', err))
+        .then(response => {
+          console.log('Response status:', response.status);
+          if (response.status === 401) {
+            Toastify({
+              text: "Please login",
+              className: "info",
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              }
+            }).showToast();
+            navigate('/login');
+          }
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => setClassDetails(data))
+        .catch(err => {
+          console.error('Fetch error:', err.message);
+          if (err.message === 'Failed to fetch') {
+            Toastify({
+              text: "Server is unavailable. Redirecting...",
+              className: "error",
+              style: {
+                background: "linear-gradient(to right, #ff5f6d, #ffc371)",
+              }
+            }).showToast();
+            navigate('/login');
+          }
+        });
+    } catch (error) {
+      console.error('Unexpected error:', error.message);
+    }
+
   }
 
   const fetchPerformanceData = () => {
