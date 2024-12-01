@@ -16,7 +16,7 @@
     "build": "npm i && vite build",
     "lint": "eslint \"src/**/*.js\"",
     "serve": "vite preview",
-    "start": "vite"
+    "start": "set PORT=5000 && vite"
   },
   "dependencies": {
     "@coreui/chartjs": "^4.0.0",
