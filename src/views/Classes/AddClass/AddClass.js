@@ -31,12 +31,14 @@ const ClassCreationForm = () => {
   const [teacherDetails, setTeacherDetails] = useState([]);
   const navigate = useNavigate();
 
+  let url = 'https://eklearnapi.onrender.com'
+
   useEffect(() => {
     fetchTeachersDetails()
   }, [])
 
   const fetchTeachersDetails = () => {
-    fetch("http://localhost:10000/api/admin/allTeacher", {
+    fetch(`${url}/api/admin/allTeacher`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
@@ -65,7 +67,7 @@ const ClassCreationForm = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://localhost:10000/api/admin/addClass", {
+      const response = await fetch(`${url}/api/admin/addClass`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',

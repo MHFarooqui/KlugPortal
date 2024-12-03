@@ -19,12 +19,14 @@ const DragDropUpload = ({ role }) => {
     const [classDetails, setClassDetails] = useState([]);
     const [submited, setSubmited] = useState(false);
 
+    let url = "https://eklearnapi.onrender.com"
+
     useEffect(() => {
         fetchClasses();
     }, []);
 
     const fetchClasses = () => {
-        fetch("http://localhost:10000/api/admin/getClasses", {
+        fetch(`${url}/api/admin/getClasses`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
@@ -78,7 +80,7 @@ const DragDropUpload = ({ role }) => {
     const handleOnboard = async () => {
         try {
             setSubmited(true);
-            const response = await fetch(`http://localhost:10000/api/admin/onboard/student/${firstSelection}`, {
+            const response = await fetch(`${url}/api/admin/onboard/student/${firstSelection}`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -99,7 +101,7 @@ const DragDropUpload = ({ role }) => {
     const handleTeacherOnboard = async () => {
         try {
             setSubmited(true);
-            const response = await fetch(`http://localhost:10000/api/admin/onboard/teachers`, {
+            const response = await fetch(`${url}/api/admin/onboard/teachers`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',

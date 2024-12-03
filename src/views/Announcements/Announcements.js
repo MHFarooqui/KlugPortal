@@ -31,8 +31,9 @@ function AnnouncementForm() {
     fetchClassDetails()
   }, [])
 
+  let url = "https://eklearnapi.onrender.com"
   const fetchClassDetails = () => {
-    fetch("http://localhost:10000/api/admin/getClasses", {
+    fetch(`${url}/api/admin/getClasses`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
@@ -71,7 +72,7 @@ function AnnouncementForm() {
 
   const handleSubmit = async (e) => {
     try {
-      const response = await fetch(`http://localhost:10000/api/notification/save`, {
+      const response = await fetch(`${url}/api/notification/save`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',

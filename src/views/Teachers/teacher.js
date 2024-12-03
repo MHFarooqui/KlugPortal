@@ -5,11 +5,13 @@ import Toastify from 'toastify-js'
 import { useNavigate } from 'react-router-dom' 
 import "toastify-js/src/toastify.css"
 
+let url = "https://eklearnapi.onrender.com"
+
 const Teachers = () => {
   const navigate = useNavigate();
   const [students, setStudents] = useState([]);
   useEffect(() => {
-    fetch("http://localhost:10000/api/admin/allTeacher", {
+    fetch(`${url}/api/admin/allTeacher`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',

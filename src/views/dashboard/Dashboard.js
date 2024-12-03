@@ -30,6 +30,8 @@ export default function Dashboard() {
   const [scorePerformance, setScorePerformance] = useState([])
   const navigate = useNavigate();
 
+  let url = "https://eklearnapi.onrender.com";
+
   let classScorePerformanceChartData = {
     labels: [],
     datasets: [{
@@ -94,7 +96,7 @@ export default function Dashboard() {
 
   const fetchClassDetails = () => {
     try {
-      fetch("http://localhost:10000/api/admin/getClasses", {
+      fetch(`${url}/api/admin/getClasses`, {
         method: "GET",
         headers: {
           'Content-Type': 'application/json',
@@ -139,7 +141,7 @@ export default function Dashboard() {
   }
 
   const fetchPerformanceData = () => {
-    fetch("http://localhost:10000/api/admin/studentsAverage", {
+    fetch(`${url}/api/admin/studentsAverage`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
@@ -157,7 +159,7 @@ export default function Dashboard() {
   }
 
   const fetchClassScorePerformance = (Class_id) => {
-    fetch(`http://localhost:10000/api/admin/classPerformance/${Class_id}`, {
+    fetch(`${url}/api/admin/classPerformance/${Class_id}`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',

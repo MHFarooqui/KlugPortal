@@ -38,6 +38,9 @@ function ClassInfo() {
   const [updateMessage, setUpdateMessage] = useState(null)
   const [classIncharge, setClassIncharge] = useState([])
 
+  let url = "https://eklearnapi.onrender.com"
+
+
   useEffect(() => {
     fetchClassDetails()
     fetchClassTeachersDetails()
@@ -46,7 +49,7 @@ function ClassInfo() {
   }, [id])
 
   const fetchTeachers = () => {
-    fetch(`http://localhost:10000/api/admin/allTeacher`, {
+    fetch(`${url}/api/admin/allTeacher`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
@@ -64,7 +67,7 @@ function ClassInfo() {
   }
 
   const fetchClassDetails = () => {
-    fetch(`http://localhost:10000/api/admin/Students/${id}`, {
+    fetch(`${url}/api/admin/Students/${id}`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
@@ -82,7 +85,7 @@ function ClassInfo() {
   }
 
   const fetchClassTeachersDetails = () => {
-    fetch(`http://localhost:10000/api/admin/teachers/${id}`, {
+    fetch(`${url}/api/admin/teachers/${id}`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
@@ -100,7 +103,7 @@ function ClassInfo() {
   }
 
   const fetchClassIncharge = () => {
-    fetch(`http://localhost:10000/api/admin/ClassIncharge/${id}`, {
+    fetch(`${url}/api/admin/ClassIncharge/${id}`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
@@ -157,7 +160,7 @@ function ClassInfo() {
     New Teacher: ${updatedSubject.teacher_name} (ID: ${updatedSubject.teacher_id})`
     setUpdateMessage(message)
 
-    fetch(`http://localhost:10000/api/admin/updateTeacher/${updatedSubject.id}/${updatedSubject.teacher_id}`, {
+    fetch(`${url}/api/admin/updateTeacher/${updatedSubject.id}/${updatedSubject.teacher_id}`, {
       method: "PUT",
       headers: {
         'Content-Type': 'application/json',

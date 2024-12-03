@@ -45,12 +45,14 @@ function CreateTest() {
   const [subjects, setSubjects] = useState([]);
   const navigate = useNavigate();
 
+  let url = "https://eklearnapi.onrender.com"
+
   useEffect(() => {
     fetchClasses();
   }, []);
 
   const fetchClasses = () => {
-    fetch("http://localhost:10000/api/admin/getClasses", {
+    fetch(`${url}/api/admin/getClasses`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
@@ -78,7 +80,7 @@ function CreateTest() {
   };
 
   const fetchSubjects = (classId) => {
-    fetch(`http://localhost:10000/api/admin/getSubjects/${classId}`, {
+    fetch(`${url}/api/admin/getSubjects/${classId}`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
@@ -173,7 +175,7 @@ function CreateTest() {
     };
 
     try {
-      const response = await fetch('http://localhost:10000/api/admin/createTests', {
+      const response = await fetch(`${url}/api/admin/createTests`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

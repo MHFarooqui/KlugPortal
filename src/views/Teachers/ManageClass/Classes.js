@@ -17,13 +17,15 @@ const ManageClass = () => {
   const [selectedSubject, setSelectedSubject] = useState(null)
   const navigate = useNavigate();
 
+  let url = "https://eklearnapi.onrender.com";
+
   useEffect(() => {
     fetchClassDetails()
     fetchTeachers()
   }, [])
 
   const fetchClassDetails = () => {
-    fetch(`http://localhost:10000/api/admin/unassigedClass`, {
+    fetch(`${url}/api/admin/unassigedClass`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
@@ -41,7 +43,7 @@ const ManageClass = () => {
   }
 
   const fetchTeachers = () => {
-    fetch(`http://localhost:10000/api/admin/allTeacher`, {
+    fetch(`${url}/api/admin/allTeacher`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
@@ -69,7 +71,7 @@ const ManageClass = () => {
   }
 
   const fetchSubjects = (classId) => {
-    fetch(`http://localhost:10000/api/admin/subjects/${classId}`, {
+    fetch(`${url}/api/admin/subjects/${classId}`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
@@ -102,7 +104,7 @@ const ManageClass = () => {
 
   const handleConfirmAssignment = () => {
     if (selectedClass && selectedTeacher && selectedSubject) {
-      fetch(`http://localhost:10000/api/admin/assignTeacher/${selectedTeacher}/${selectedClass}/${selectedSubject}`, {
+      fetch(`${url}/api/admin/assignTeacher/${selectedTeacher}/${selectedClass}/${selectedSubject}`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',

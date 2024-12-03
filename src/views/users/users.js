@@ -52,12 +52,14 @@ function UsersPage() {
   const navigate = useNavigate();
   const itemsPerPage = 10
 
+  let url = "https://eklearnapi.onrender.com";
+
   useEffect(() => {
     fetchStudents()
   }, []) // Added empty dependency array to prevent infinite loop
 
   const fetchStudents = () => {
-    fetch("http://localhost:10000/api/admin/allUsers", {
+    fetch(`${url}/api/admin/allUsers`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
@@ -119,7 +121,7 @@ function UsersPage() {
 
   const updateStudentRequest =async () => {
     console.log("called")
-    await fetch(`http://localhost:10000/api/admin/UpdateStudent`, {
+    await fetch(`${url}/api/admin/UpdateStudent`, {
       method: "PUT",
       headers: {
         'Content-Type': 'application/json',

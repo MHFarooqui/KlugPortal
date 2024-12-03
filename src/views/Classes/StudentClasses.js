@@ -29,8 +29,10 @@ const StudentClasses = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const navigate = useNavigate()
 
+  let url = "https://eklearnapi.onrender.com"
+
   useEffect(() => {
-    fetch("http://localhost:10000/api/admin/allClasses", {
+    fetch(`${url}/api/admin/allClasses`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
