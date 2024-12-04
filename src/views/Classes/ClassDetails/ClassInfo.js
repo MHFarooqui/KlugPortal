@@ -21,25 +21,27 @@ import {
 } from '@coreui/react'
 import { cilSearch, cilPencil } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { randomColor } from 'randomcolor'
+import Toastify from 'toastify-js'
+import 'toastify-js/src/toastify.css'
 import './ClassInfo.scss'
 
 function ClassInfo() {
   const { id = '' } = useParams()
+  const navigate = useNavigate()
   const [students, setStudents] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
   const [subjectTeacherInfo, setSubjectTeacherInfo] = useState([])
   const [editModalVisible, setEditModalVisible] = useState(false)
-  const [editIncgarge, setEditIncgarge] = useState(false)
+  const [editIncharge, setEditIncharge] = useState(false)
   const [editingTeacher, setEditingTeacher] = useState(null)
   const [newTeacherId, setNewTeacherId] = useState('')
   const [teachers, setTeachers] = useState([])
   const [updateMessage, setUpdateMessage] = useState(null)
-  const [classIncharge, setClassIncharge] = useState([])
+  const [classIncharge, setClassIncharge] = useState({})
 
-  let url = "https://eklearnapi.onrender.com"
-
+  const url = "https://eklearnapi.onrender.com"
 
   useEffect(() => {
     fetchClassDetails()
@@ -120,7 +122,6 @@ function ClassInfo() {
       .catch(err => console.error('Fetch error:', err))
   }
 
-
   const filteredStudents = students.filter(student =>
     student.student_name.toLowerCase().includes(searchTerm.toLowerCase())
   )
@@ -128,17 +129,23 @@ function ClassInfo() {
   const handleUpdateTeacher = (teacher) => {
     setEditingTeacher(teacher)
     setNewTeacherId(teacher.teacher_id)
+    setEditIncharge(false)
     setEditModalVisible(true)
   }
 
-  const handleUpdateInCharge = (teacher) => {
-    setEditIncgarge(true);
-    setEditingTeacher(teacher)
-    setNewTeacherId(teacher.teacher_id)
+  const handleUpdateInCharge = () => {
+    setEditIncharge(true)
+    setEditingTeacher(classIncharge)
+    setNewTeacherId(classIncharge.teacher_id)
     setEditModalVisible(true)
   }
 
   const handleSaveTeacher = () => {
+    if (editIncharge) {
+      handleSaveInCharge()
+      return
+    }
+
     const newTeacher = teachers.find(teacher => teacher.id == newTeacherId)
     if (!newTeacher) {
       console.error('Selected teacher not found')
@@ -154,7 +161,6 @@ function ClassInfo() {
     setSubjectTeacherInfo(updatedTeachers)
     setEditModalVisible(false)
 
-    // Print the new teacher details and subject details
     const updatedSubject = updatedTeachers.find(teacher => teacher.subject_name === editingTeacher.subject_name)
     const message = `Teacher updated for ${updatedSubject.subject_name}:
     New Teacher: ${updatedSubject.teacher_name} (ID: ${updatedSubject.teacher_id})`
@@ -182,9 +188,49 @@ function ClassInfo() {
       }
       return response.json();
     })
-      .then(response => response.json())
       .then(data => console.log('Teacher updated successfully', data))
       .catch(err => console.error('Error updating teacher:', err))
+  }
+
+  const handleSaveInCharge = () => {
+    const newInCharge = teachers.find(teacher => teacher.id == newTeacherId)
+    if (!newInCharge) {
+      console.error('Selected teacher not found')
+      return
+    }
+
+    setClassIncharge({ ...classIncharge, teacher_id: newTeacherId, teacher_name: newInCharge.teacher_name })
+    setEditModalVisible(false)
+    setEditIncharge(false)
+
+    const message = `Class In-Charge updated:
+    New In-Charge: ${newInCharge.teacher_name} (ID: ${newInCharge.id})`
+    setUpdateMessage(message)
+
+    fetch(`http://localhost:10000/api/admin/updateClassIncharge/${id}/${newTeacherId}`, {
+      method: "PUT",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${localStorage.getItem('token')}`
+      }
+    }).then(response => {
+      if (response.status === 401) {
+        Toastify({
+          text: "Please login",
+          className: "info",
+          style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+          }
+        }).showToast();
+        navigate('/login')
+      }
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+      .then(data => console.log('Class In-Charge updated successfully', data))
+      .catch(err => console.error('Error updating Class In-Charge:', err))
   }
 
   return (
@@ -250,7 +296,7 @@ function ClassInfo() {
                   <h4>Class In-Charge</h4>
                   <p>{classIncharge.teacher_name}</p>
                 </div>
-                <CButton color="light" onClick={() => handleUpdateInCharge(classIncharge)}>
+                <CButton color="light" onClick={handleUpdateInCharge}>
                   <CIcon icon={cilPencil} />
                 </CButton>
               </div>
@@ -261,19 +307,18 @@ function ClassInfo() {
 
       <CModal visible={editModalVisible} onClose={() => setEditModalVisible(false)}>
         <CModalHeader closeButton>
-          <CModalTitle>Edit Teacher</CModalTitle>
+          <CModalTitle>{editIncharge ? 'Edit Class In-Charge' : 'Edit Teacher'}</CModalTitle>
         </CModalHeader>
         <CModalBody>
           <CForm>
             <div className="mb-3">
-              {editIncgarge == true ? 
-              <label htmlFor="subjectName" className="form-label">incharge</label> : 
-              <label htmlFor="subjectName" className="form-label">Subject</label>}
-
+              <label htmlFor="subjectName" className="form-label">
+                {editIncharge ? 'In-Charge' : 'Subject'}
+              </label>
               <CFormInput
                 type="text"
                 id="subjectName"
-                value={editingTeacher?.subject_name || ''}
+                value={editIncharge ? classIncharge.teacher_name : editingTeacher?.subject_name || ''}
                 readOnly
               />
             </div>
@@ -295,7 +340,7 @@ function ClassInfo() {
           </CForm>
         </CModalBody>
         <CModalFooter>
-          <CButton color="secondary" onClick={() => setEditModalVisible(false)}>
+          <CButton color="secondary" onClick={() => { setEditModalVisible(false); setEditIncharge(false); }}>
             Close
           </CButton>
           <CButton color="primary" onClick={handleSaveTeacher}>
@@ -307,5 +352,5 @@ function ClassInfo() {
   )
 }
 
+export default ClassInfo;
 
-export default ClassInfo;  
