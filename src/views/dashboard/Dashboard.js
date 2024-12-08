@@ -87,8 +87,8 @@ export default function Dashboard() {
     ]);
 
     setSelectedMonth('January');
-    fetchPerformanceData();
-    fetchClassScorePerformance(selectedClass)
+    // fetchPerformanceData();
+    // fetchClassScorePerformance(selectedClass)
     if (performanceData.length > 0) {
       setSelectedMonth(performanceData[0].month)
     }
