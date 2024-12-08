@@ -13,7 +13,7 @@ import CIcon from '@coreui/icons-react'
 
 import { AppSidebarNav } from './AppSidebarNav'
 
-import logoImage from '../assets/brand/LOGO.png'
+import logoImage from '../assets/images/klug-logo-white.svg'
 
 // sidebar nav config
 import navigation from '../_nav'
@@ -36,7 +36,7 @@ const AppSidebar = () => {
     >
       <CSidebarHeader className="border-bottom">
         <CSidebarBrand to="/">
-          <img src={logoImage} alt="Logo" className="sidebar-brand-full" height={55} />
+          <img src={logoImage} alt="Logo" className="sidebar-brand-full" height={80} width={200}/>
         </CSidebarBrand>
         <CCloseButton
           className="d-lg-none"

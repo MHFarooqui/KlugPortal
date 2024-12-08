@@ -93,9 +93,9 @@ const Login = () => {
                         </CButton>
                       </CCol>
                       <CCol xs={6} className="text-right">
-                        <CButton color="link" className="px-0">
+                        {/* <CButton color="link" className="px-0">
                           Forgot password?
-                        </CButton>
+                        </CButton> */}
                       </CCol>
                     </CRow>
                   </CForm>
@@ -106,14 +106,13 @@ const Login = () => {
                   <div>
                     <h2>Sign up</h2>
                     <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                      tempor incididunt ut labore et dolore magna aliqua.
+                      Readh out to our sales team at <b>sales@eklearn.online</b> and claim your 15 days free trial now.
                     </p>
-                    <Link to="/register">
-                      <CButton color="primary" className="mt-3" active tabIndex={-1}>
-                        Register Now!
+                    {/* <Link to="/register"> */}
+                      <CButton color="primary" className="mt-3" active tabIndex={-1} mailto="sales@eklearn.online">
+                        Contact now!
                       </CButton>
-                    </Link>
+                    {/* </Link> */}
                   </div>
                 </CCardBody>
               </CCard>
